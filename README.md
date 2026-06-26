@@ -8,7 +8,40 @@ MediCheck AI is a modern mobile-first web app prototype that helps users verify 
 
 > Important: This is a hackathon prototype and decision-support demo. It is not a replacement for a doctor, pharmacist, or official medicine verification system.
 
+
 ---
+># 🚀 Live Demo
+
+Experience **MediCheck AI** directly in your browser.
+
+🔗 **Live App Preview:**
+[`https://your-live-demo-link.com`](https://ajm1230.github.io/Medicheck-AI-AI-Powered-Medication-Safety-System/)
+
+> **Recommended Demo Flow (≈2 minutes):**
+>
+> 1. Click **Start Safety Check**
+> 2. Use the **Demo Autofill** buttons to quickly load sample data.
+> 3. Review the AI-generated medication safety report.
+> 4. Explore allergy detection, medicine interaction analysis, voice summary, diet & precaution recommendations, and doctor assistance.
+
+### ✨ Highlights
+
+* 🤖 AI-powered medication safety analysis
+* 📷 OCR-based medicine & prescription scanning
+* 💊 Multiple medicine verification
+* ⚠️ Allergy & medicine interaction detection
+* 📄 Prescription matching
+* 🟢🟡🔴 Safe / Caution / Unsafe classification
+* 🥗 Personalized precautions, diet & hydration guidance
+* 🔊 Voice assistant with start/stop controls
+* 👨‍⚕️ Doctor assistance section
+* 📜 Report history with local storage
+* 📱 Responsive glassmorphism UI optimized for desktop and mobile
+
+**For the best experience, open the demo in a modern browser such as Chrome, Edge, or Safari.**
+
+
+
 
 ## 1. What the app does
 
