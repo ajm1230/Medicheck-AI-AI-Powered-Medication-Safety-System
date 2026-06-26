@@ -1,0 +1,14 @@
+<svg width="700" height="440" viewBox="0 0 700 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="700" height="440" rx="42" fill="#F8FBFF"/>
+<rect x="70" y="80" width="560" height="280" rx="28" fill="white" stroke="#DDEBFF" stroke-width="4"/>
+<path d="M435 360C508 318 569 248 630 143V332C630 347.464 617.464 360 602 360H435Z" fill="url(#p)"/>
+<text x="122" y="160" fill="#111827" font-family="Arial, sans-serif" font-size="44" font-weight="800">Paracetamol</text>
+<text x="122" y="208" fill="#111827" font-family="Arial, sans-serif" font-size="38" font-weight="700">Tablets IP 650 mg</text>
+<rect x="122" y="235" width="145" height="54" rx="10" fill="#126EF6"/>
+<text x="146" y="274" fill="white" font-family="Arial, sans-serif" font-size="32" font-weight="800">650 mg</text>
+<circle cx="116" cy="320" r="7" fill="#687385"/>
+<text x="136" y="330" fill="#687385" font-family="Arial, sans-serif" font-size="25" font-weight="700">Pain / Fever Relief</text>
+<defs>
+<linearGradient id="p" x1="435" y1="143" x2="633" y2="357" gradientUnits="userSpaceOnUse"><stop stop-color="#0EA5FF"/><stop offset="1" stop-color="#0757E8"/></linearGradient>
+</defs>
+</svg>
