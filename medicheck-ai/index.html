@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCheck AI - Medicine Safety Verification</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.3.6/quagga.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Home Screen -->
+        <div id="homeScreen" class="screen active">
+            <div class="header">
+                <h1>MediCheck AI</h1>
+                <p class="subtitle">Medicine Safety Verification</p>
+            </div>
+            
+            <div class="dashboard">
+                <div class="greeting-card">
+                    <h2>Welcome, <span id="userName">Judge Demo</span></h2>
+                    <p id="userStatus">Demo Mode</p>
+                </div>
+                
+                <div class="safety-score-card">
+                    <div class="score-value" id="safetyScore">--</div>
+                    <div class="score-label">Safety Score</div>
+                </div>
+                
+                <div class="action-card" id="startVerification">
+                    <h3>Start Medicine Verification</h3>
+                    <p>Scan & verify your medicine safely</p>
+                </div>
+                
+                <div id="recentReports" class="reports-card"></div>
+            </div>
+        </div>
+
+        <!-- Verify Medicine Screen -->
+        <div id="verifyScreen" class="screen">
+            <div class="header-back">
+                <button class="back-btn" onclick="app.goHome()">← Back</button>
+                <h2>Verify Medicine</h2>
+            </div>
+            
+            <div class="verify-container">
+                <!-- Barcode Card -->
+                <div class="card">
+                    <h3>📱 Scan QR/Barcode</h3>
+                    <div id="scanner-wrapper">
+                        <button onclick="app.startScanner()" class="btn-primary">Start Scanner</button>
+                        <div id="scanner" style="display:none; width:100%; height:300px;"></div>
+                    </div>
+                    <input type="text" id="barcodeInput" placeholder="Or paste barcode text..." class="input-field">
+                    <div id="barcodeStatus" class="status-text"></div>
+                </div>
+
+                <!-- Medicine Photo Card -->
+                <div class="card">
+                    <h3>💊 Capture Medicine Photo</h3>
+                    <input type="file" id="medicinePhotoInput" accept="image/*" onchange="app.processMedicinePhoto(event)">
+                    <div id="photoPreview"></div>
+                    <textarea id="medicineOcrText" placeholder="OCR extracted text (auto-filled)..." class="input-field" rows="3"></textarea>
+                    <input type="text" id="medicineManualInput" placeholder="Manual medicine name/strength..." class="input-field">
+                </div>
+
+                <!-- Prescription (Optional) -->
+                <div class="card">
+                    <h3>📋 Prescription (Optional)</h3>
+                    <input type="file" id="prescriptionInput" accept=".pdf,image/*" onchange="app.processPrescription(event)">
+                    <textarea id="prescriptionOcrText" placeholder="Prescription text..." class="input-field" rows="2"></textarea>
+                </div>
+
+                <!-- Analyze Button -->
+                <button onclick="app.analyzeMedicine()" class="btn-analyze">Analyze Medicine</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <div class="header-back">
+                <button class="back-btn" onclick="app.goHome()">← Back</button>
+                <h2>Analysis Result</h2>
+            </div>
+            
+            <div class="results-container">
+                <div id="resultStatus" class="result-status"></div>
+                <div id="resultDetails" class="result-details"></div>
+                <button onclick="app.generateReport()" class="btn-primary">Generate Report</button>
+            </div>
+        </div>
+
+        <!-- Test Mode / Demo Screen -->
+        <div id="demoScreen" class="screen">
+            <div class="header-back">
+                <button class="back-btn" onclick="app.goHome()">← Back</button>
+                <h2>Judge Demo</h2>
+            </div>
+            
+            <div class="demo-container">
+                <p class="demo-info">Click any demo case to see AI analysis result (30 seconds)</p>
+                
+                <button onclick="app.runDemo(1)" class="demo-btn safe">
+                    ✓ Safe Medicine Demo
+                </button>
+                <button onclick="app.runDemo(2)" class="demo-btn warning">
+                    ⚠ Wrong Medicine Demo
+                </button>
+                <button onclick="app.runDemo(3)" class="demo-btn danger">
+                    ✗ Allergy Risk Demo
+                </button>
+                <button onclick="app.runDemo(4)" class="demo-btn warning">
+                    ⚠ Dosage Mismatch Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Screen -->
+        <div id="profileScreen" class="screen">
+            <div class="header-back">
+                <button class="back-btn" onclick="app.goHome()">← Back</button>
+                <h2>Profile</h2>
+            </div>
+            
+            <div class="profile-container">
+                <div class="card">
+                    <h3>User Information</h3>
+                    <input type="text" id="profileName" placeholder="Name" class="input-field">
+                    <input type="number" id="profileAge" placeholder="Age" class="input-field">
+                </div>
+                
+                <div class="card">
+                    <h3>Allergies</h3>
+                    <input type="text" id="profileAllergies" placeholder="e.g., Penicillin, Aspirin" class="input-field">
+                </div>
+                
+                <div class="card">
+                    <h3>Health Conditions</h3>
+                    <input type="text" id="profileConditions" placeholder="e.g., Diabetes, Asthma" class="input-field">
+                </div>
+                
+                <button onclick="app.saveProfile()" class="btn-primary">Save Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button onclick="app.navigate('home')" class="nav-btn" id="navHome">
+            <span class="icon">🏠</span>
+            <span>Home</span>
+        </button>
+        <button onclick="app.navigate('reports')" class="nav-btn" id="navReports">
+            <span class="icon">📊</span>
+            <span>Reports</span>
+        </button>
+        <button onclick="app.navigate('verify')" class="nav-btn center-btn" id="navVerify">
+            <span class="icon">+</span>
+        </button>
+        <button onclick="app.navigate('demo')" class="nav-btn" id="navDemo">
+            <span class="icon">🧪</span>
+            <span>Demo</span>
+        </button>
+        <button onclick="app.navigate('profile')" class="nav-btn" id="navProfile">
+            <span class="icon">👤</span>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- Landing Page (Judge Demo Button) -->
+    <div id="landingPage" class="landing-screen">
+        <div class="landing-content">
+            <h1>MediCheck AI</h1>
+            <p>Medicine Safety Verification System</p>
+            
+            <button onclick="app.startJudgeDemo()" class="btn-judge-demo">
+                Try Judge Demo (No Login Required)
+            </button>
+            <button onclick="app.startRealMode()" class="btn-real-mode">
+                Real Mode (Add Profile)
+            </button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/ocr.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/demo.js"></script>
+</body>
+</html>
