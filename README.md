@@ -15,7 +15,7 @@ MediCheck AI is a modern mobile-first web app prototype that helps users verify 
 Experience **MediCheck AI** directly in your browser.
 
 🔗 **Live App Preview:**
-[`https://your-live-demo-link.com`](https://ajm1230.github.io/Medicheck-AI-AI-Powered-Medication-Safety-System/)
+https://ajm1230.github.io/Medicheck-AI-AI-Powered-Medication-Safety-System/
 
 > **Recommended Demo Flow (≈2 minutes):**
 >
