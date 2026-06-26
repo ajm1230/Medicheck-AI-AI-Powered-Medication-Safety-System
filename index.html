@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0A7BFF" />
+  <title>MediCheck AI — Medicine Safety Assistant</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+</head>
+<body>
+  <main class="device-frame" id="appShell">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="topbar">
+      <button class="icon-btn soft" id="backBtn" aria-label="Go back">←</button>
+      <div class="brand-wrap">
+        <img src="assets/logo.svg" alt="MediCheck AI" class="brand-logo" />
+        <div>
+          <h1>MediCheck AI</h1>
+          <p>Medication safety in 60 seconds</p>
+        </div>
+      </div>
+      <button class="icon-btn soft" id="voiceGuideBtn" aria-label="Start voice guide">🔊</button>
+    </header>
+
+    <section id="introModal" class="modal hidden" aria-modal="true" role="dialog">
+      <div class="modal-card glass">
+        <div class="modal-hero">
+          <img src="assets/logo.svg" alt="MediCheck AI logo" />
+          <span class="pill live">Guided Safety Flow</span>
+        </div>
+        <h2>Welcome to MediCheck AI</h2>
+        <p class="muted">Check multiple medicines using your health problem, allergy profile, medicine photos, prescription and AI JSON analysis.</p>
+        <div class="mini-roadmap">
+          <div><b>1</b><span>Tell problem</span></div>
+          <i>→</i>
+          <div><b>2</b><span>Build profile</span></div>
+          <i>→</i>
+          <div><b>3</b><span>Add medicines</span></div>
+          <i>→</i>
+          <div><b>4</b><span>Get report</span></div>
+        </div>
+        <div class="judge-note">Judges can use demo buttons inside each step. It still uses the same report pipeline.</div>
+        <button class="primary-btn full" id="startIntroBtn">Start Safety Check</button>
+      </div>
+    </section>
+
+    <section class="screen active" data-screen="home">
+      <div class="hero-card glass">
+        <div class="hero-copy">
+          <span class="pill">AI + OCR + Voice</span>
+          <h2>Check if your medicines are safe together.</h2>
+          <p>Scan prescription and multiple medicine photos. Get safe, moderate and unsafe medicine list with allergy and dose warnings.</p>
+        </div>
+        <button class="big-plus" id="startScanBtn" aria-label="Start medicine scan"><span>+</span></button>
+        <div class="arrow-hint center-hint">Click the big + to start</div>
+      </div>
+
+      <div class="quick-grid">
+        <button class="quick-card glass" data-go="history">
+          <span>📁</span>
+          <b>Records</b>
+          <small>Saved reports</small>
+        </button>
+        <button class="quick-card glass" data-go="profile">
+          <span>⚠️</span>
+          <b>Allergies</b>
+          <small>Risk profile</small>
+        </button>
+      </div>
+
+      <div class="insight-card glass">
+        <div class="status-dot"></div>
+        <div>
+          <b>Prototype optimized for judges</b>
+          <p>No login. Works with mouse and touch. Camera/upload supported. Uses live AI when API key is present; fallback keeps the demo running if AI is unavailable.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="problem">
+      <div class="step-head">
+        <span class="step-badge">Step 1/5</span>
+        <h2>Tell your health problem</h2>
+        <p>This helps AI check whether each medicine matches your need.</p>
+      </div>
+
+      <div class="instruction glass">
+        <span>↘</span>
+        <p>Speak or type your problem. Judges can click autofill for a complete demo case.</p>
+      </div>
+
+      <div class="voice-panel glass">
+        <h3>Speak Problem</h3>
+        <p class="muted">Use browser speech-to-text.</p>
+        <div class="row">
+          <button class="secondary-btn" id="startSpeechBtn">🎙 Start Speaking</button>
+          <button class="ghost-btn" id="stopSpeechBtn">Stop</button>
+        </div>
+        <small id="speechStatus">Ready</small>
+      </div>
+
+      <label class="field-label">Type or edit problem</label>
+      <textarea id="problemText" class="input-area" placeholder="Example: I have fever, body pain, mild acidity..."></textarea>
+
+      <button class="demo-btn full" id="demoProblemBtn">⚡ Auto Fill Demo Problem</button>
+      <button class="primary-btn full" id="toProfileBtn">Next: Build Safety Profile</button>
+    </section>
+
+    <section class="screen" data-screen="profile">
+      <div class="step-head">
+        <span class="step-badge">Step 2/5</span>
+        <h2>Build safety profile</h2>
+        <p>Short visual profile for allergy, alcohol, smoking and health risk checks.</p>
+      </div>
+
+      <div class="profile-card glass">
+        <div class="two-cols">
+          <label><span>Age</span><input id="ageInput" type="number" inputmode="numeric" placeholder="16" /></label>
+          <label><span>Weight</span><input id="weightInput" type="number" inputmode="numeric" placeholder="Optional" /></label>
+        </div>
+      </div>
+
+      <div class="section-title">Medicine allergies</div>
+      <div class="chip-cloud" id="allergyChips">
+        <button class="chip" data-value="Ibuprofen">Ibuprofen</button>
+        <button class="chip" data-value="Penicillin">Penicillin</button>
+        <button class="chip" data-value="Aspirin">Aspirin</button>
+        <button class="chip" data-value="Paracetamol">Paracetamol</button>
+        <button class="chip" data-value="Sulfa drugs">Sulfa drugs</button>
+      </div>
+      <input id="customAllergy" class="line-input" placeholder="Other allergy? Type and press Add" />
+      <button class="ghost-btn mini" id="addAllergyBtn">Add Allergy</button>
+
+      <div class="section-title">Lifestyle risk</div>
+      <div class="visual-grid">
+        <div class="choice-card glass" data-group="alcohol" data-value="never">🍷<b>Alcohol</b><span>Never</span></div>
+        <div class="choice-card glass" data-group="alcohol" data-value="sometimes">🍷<b>Alcohol</b><span>Sometimes</span></div>
+        <div class="choice-card glass" data-group="alcohol" data-value="regularly">🍷<b>Alcohol</b><span>Regularly</span></div>
+        <div class="choice-card glass" data-group="smoking" data-value="no">🚬<b>Smoking</b><span>No</span></div>
+        <div class="choice-card glass" data-group="smoking" data-value="sometimes">🚬<b>Smoking</b><span>Sometimes</span></div>
+        <div class="choice-card glass" data-group="smoking" data-value="regularly">🚬<b>Smoking</b><span>Regularly</span></div>
+      </div>
+
+      <div class="section-title">Health conditions</div>
+      <div class="chip-cloud" id="conditionChips">
+        <button class="chip" data-value="Liver problem">Liver</button>
+        <button class="chip" data-value="Kidney problem">Kidney</button>
+        <button class="chip" data-value="Asthma">Asthma</button>
+        <button class="chip" data-value="Diabetes">Diabetes</button>
+        <button class="chip" data-value="High BP">High BP</button>
+        <button class="chip" data-value="Acidity">Acidity</button>
+      </div>
+
+      <label class="field-label">Current medicines, if any</label>
+      <input id="currentMedsInput" class="line-input" placeholder="Example: Cetirizine, Metformin" />
+
+      <button class="demo-btn full" id="demoProfileBtn">⚡ Auto Fill Demo Profile</button>
+      <button class="primary-btn full" id="toMedicinesBtn">Save Profile & Continue</button>
+    </section>
+
+    <section class="screen" data-screen="medicines">
+      <div class="step-head">
+        <span class="step-badge">Step 3/5</span>
+        <h2>Add your medicines</h2>
+        <p>Add every medicine photo. MediCheck checks each medicine separately and checks conflicts between medicines.</p>
+      </div>
+
+      <div class="instruction glass">
+        <span>↙</span>
+        <p>Use <b>+ Add Medicine Photo</b> for each strip/box. For judges, auto-add multiple medicines.</p>
+      </div>
+
+      <input id="medicineFileInput" type="file" accept="image/*" capture="environment" hidden multiple />
+      <div class="action-stack">
+        <button class="primary-btn full" id="addMedicineBtn">+ Add Medicine Photo</button>
+        <button class="demo-btn full" id="demoMedsBtn">⚡ Auto Add Demo Medicines</button>
+      </div>
+
+      <div class="scan-note glass">
+        <b>Why photo + QR?</b>
+        <p>Barcode/QR may not include full medicine details, so the app also reads label text using OCR.</p>
+      </div>
+
+      <div id="medicineList" class="medicine-list"></div>
+      <button class="primary-btn full" id="toPrescriptionBtn">Next: Upload Prescription</button>
+    </section>
+
+    <section class="screen" data-screen="prescription">
+      <div class="step-head">
+        <span class="step-badge">Step 4/5</span>
+        <h2>Upload prescription</h2>
+        <p>Prescription helps verify whether medicines match what doctor wrote.</p>
+      </div>
+
+      <input id="prescriptionFileInput" type="file" accept="image/*,.pdf" capture="environment" hidden />
+      <div class="action-stack">
+        <button class="primary-btn full" id="uploadPrescriptionBtn">📄 Upload / Scan Prescription</button>
+        <button class="demo-btn full" id="demoPrescriptionBtn">⚡ Use Example Handwritten Prescription</button>
+      </div>
+
+      <div id="prescriptionPreview" class="prescription-preview glass hidden"></div>
+      <label class="field-label">OCR prescription text</label>
+      <textarea id="prescriptionText" class="input-area tall" placeholder="Detected prescription text will appear here. You can edit if OCR is wrong."></textarea>
+
+      <button class="primary-btn full" id="submitAnalysisBtn">Submit for AI Safety Check</button>
+    </section>
+
+    <section class="screen" data-screen="processing">
+      <div class="process-card glass">
+        <div class="scanner-ring"><div></div></div>
+        <h2>AI safety analysis</h2>
+        <p>Strict JSON report is being generated from your inputs.</p>
+        <div class="progress-track"><div id="progressBar"></div></div>
+        <div id="processLogs" class="process-logs"></div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="report">
+      <div id="reportContainer"></div>
+    </section>
+
+    <section class="screen" data-screen="history">
+      <div class="step-head">
+        <span class="step-badge">Records</span>
+        <h2>Saved reports</h2>
+        <p>Reports are stored locally on this device.</p>
+      </div>
+      <div id="historyList" class="history-list"></div>
+      <button class="ghost-btn full" id="clearHistoryBtn">Clear Records</button>
+    </section>
+
+    <nav class="bottom-nav glass">
+      <button class="nav-btn active" data-go="home">⌂<span>Home</span></button>
+      <button class="nav-btn" data-go="profile">⚠️<span>Profile</span></button>
+      <button class="nav-btn nav-main" data-go="problem">+<span>Scan</span></button>
+      <button class="nav-btn" data-go="history">▤<span>Records</span></button>
+    </nav>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/demo-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/ocr.js"></script>
+  <script src="js/barcode.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
