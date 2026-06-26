@@ -1,7 +1,7 @@
 window.MediAI = (() => {
   // Prototype hardcoded API location. Replace the value below with your OpenRouter key.
   // WARNING: Frontend hardcoding exposes the key. For production, move this to a backend.
-  const OPENROUTER_API_KEY = "PASTE_OPENROUTER_API_KEY_HERE";
+  const OPENROUTER_API_KEY = "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";
   const OPENROUTER_MODEL = "openai/gpt-4o-mini";
 
   const hasLiveKey = () => OPENROUTER_API_KEY && !OPENROUTER_API_KEY.includes("PASTE_") && OPENROUTER_API_KEY.length > 20;
